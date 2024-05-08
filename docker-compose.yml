@@ -1,0 +1,48 @@
+version: '3.8'
+services:
+  rabbit:
+      image: rabbitmq:3-management
+      ports:
+        - 5672:5672
+        - 15672:15672
+  dbclient:
+    image: mongo
+    ports:
+      - 27027:27017
+    volumes:
+      - v_dbclient:/data/db
+  dblivre:
+    image: mongo
+    ports:
+      - 27028:27017
+    volumes:
+      - v_dblivre:/data/db
+  dbemprunt:
+    image: mongo
+    ports:
+      - 27029:27017
+    volumes:
+      - v_dbemprunt:/data/db
+  client:
+    build: ./backent/api_client
+    ports:
+      - 3000:3000
+  emprunt:
+    build: ./backent/api_emprunt
+    ports:
+      - 3001:3000
+  livre:
+    build: ./backent/api_livre
+    ports:
+      - 3002:3000
+  notification:
+    build: ./backent/api_notification
+    ports:
+      - 3003:3000
+  gateway:
+    image: nginx
+    ports:
+      - 80:80
+    volumes:
+      - ./gateway/default.conf:/etc/nginx/conf.d/default.conf
+    
